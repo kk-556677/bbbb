@@ -1,51 +1,44 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>狙い目機種一覧aaa</title>
+  <meta charset="UTF-8">
+  <title>スロット狙い目一覧</title>
   <script src="https://cdn.jsdelivr.net/npm/tabletop@1.6.4/tabletop.min.js"></script>
   <style>
     body {
       font-family: sans-serif;
       padding: 20px;
-      background-color: #f8f8f8;
     }
     h1 {
       text-align: center;
     }
-    input {
+    #search {
+      margin-bottom: 10px;
+      padding: 5px;
       width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      max-width: 400px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      background: #fff;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     th, td {
-      padding: 12px;
-      border: 1px solid #ddd;
+      border: 1px solid #ccc;
+      padding: 8px;
       text-align: center;
     }
     th {
-      background-color: #333;
-      color: #fff;
+      background-color: #f2f2f2;
     }
     tr:hover {
-      background-color: #f0f0f0;
+      background-color: #f9f9f9;
     }
   </style>
 </head>
 <body>
+  <h1>スロット狙い目一覧</h1>
 
-  <h1>🎯 狙い目機種一覧</h1>
-  <input type="text" id="searchInput" placeholder="キーワードで検索..." onkeyup="filterTable()" />
+  <input type="text" id="search" placeholder="キーワードで検索（機種名・備考など）">
 
   <table id="slotTable">
     <thead>
@@ -60,23 +53,19 @@
   </table>
 
   <script>
-    //スプレッド読み込みの変更　csvからhtml
     const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTg1Cfno3smXAwJJSoZBpWesBVpppWaXtXCC8OP0K17ayGl2wRhqvIF2jWmZ1XHWih7xnGQWKPBUmfN/pubhtml';
-
-    //const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTg1Cfno3smXAwJJSoZBpWesBVpppWaXtXCC8OP0K17ayGl2wRhqvIF2jWmZ1XHWih7xnGQWKPBUmfN/pub?output=csv';
 
     function init() {
       Tabletop.init({
         key: publicSpreadsheetUrl,
         simpleSheet: true,
-        parseNumbers: true,
         callback: showInfo
       });
     }
 
     function showInfo(data) {
       const tbody = document.querySelector('#slotTable tbody');
-      tbody.innerHTML = ''; // 初期化
+      tbody.innerHTML = '';
 
       data.forEach(row => {
         const tr = document.createElement('tr');
@@ -88,20 +77,21 @@
         `;
         tbody.appendChild(tr);
       });
-    }
 
-    function filterTable() {
-      const input = document.getElementById("searchInput").value.toLowerCase();
-      const rows = document.querySelectorAll("#slotTable tbody tr");
+      // 検索機能
+      const searchInput = document.getElementById('search');
+      searchInput.addEventListener('input', () => {
+        const keyword = searchInput.value.toLowerCase();
+        const rows = tbody.querySelectorAll('tr');
 
-      rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(input) ? "" : "none";
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(keyword) ? '' : 'none';
+        });
       });
     }
 
     window.addEventListener('DOMContentLoaded', init);
   </script>
-
 </body>
 </html>
